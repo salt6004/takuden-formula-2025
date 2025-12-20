@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+        model-viewer {
+            width: 100%; height: 100%;
+            background-color: transparent;
+            outline: none;
+            --poster-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <model-viewer 
+        id="car"
+        src="https://salt6004.github.io/takuden-formula-2025/car.glb" 
+        camera-controls
+        auto-rotate
+        interaction-prompt="none"
+        shadow-intensity="1"
+        exposure="1"
+        camera-orbit="0deg 75deg 105%"
+        min-camera-orbit="auto auto auto"
+        max-camera-orbit="auto auto auto">
+    </model-viewer>
+
+    <script>
+        const model = document.querySelector('#car');
+        
+        // Listen for scroll progress from parent window (Jimdo)
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'scroll') {
+                const progress = event.data.progress;
+                
+                // Map progress to camera orbit
+                const orbitY = 75 - (progress * 45); // 75deg down to 30deg
+                const orbitX = progress * 180;        // 0deg to 180deg
+                
+                model.cameraOrbit = `${orbitX}deg ${orbitY}deg 105%`;
+            }
+        });
+    </script>
+</body>
+</html>
