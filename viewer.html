@@ -1,260 +1,225 @@
-<!-- 
-  TAKUDEN Official Website - First View Widget
-  Design & Engineering: Web Creative Director Style
--->
-
-<div id="takuden-hero-section" class="relative w-full overflow-hidden bg-[#0a0a0a] font-['Inter','Noto_Sans_JP',sans-serif]">
-    <!-- Libraries -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAKUDEN FUTURE | Engineering the Edge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,900;1,900&family=Noto+Sans+JP:wght@100;400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* CSS Scope to #takuden-hero-section */
-        #takuden-hero-section {
-            height: 100vh;
-            height: 100svh;
-            color: #ffffff;
-            --neon-orange: #ff6b00;
+        :root {
+            --accent: #ff6b00;
+            --bg: #030303;
         }
 
-        /* Loading Overlay */
-        #takuden-hero-section #loader-overlay {
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: #fff;
+            overflow: hidden;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            cursor: crosshair;
+        }
+
+        /* シネマティック・グレイン */
+        body::after {
+            content: "";
             position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 100;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Grain.png');
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        #hero {
+            height: 100vh;
+            width: 100vw;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            transition: opacity 0.8s ease-in-out;
+            justify-content: center;
+            position: relative;
         }
 
-        #takuden-hero-section .loading-text {
-            font-size: 0.875rem;
-            letter-spacing: 0.3em;
-            color: var(--neon-orange);
-            text-transform: uppercase;
-            animation: blink 1.5s infinite;
+        /* 3D Viewport */
+        .viewer-wrap {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
         }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        /* 3D Model Styling */
-        #takuden-hero-section model-viewer {
+        model-viewer {
             width: 100%;
             height: 100%;
             background-color: transparent;
+            outline: none;
             --poster-color: transparent;
             opacity: 0;
-            transform: scale(0.9) translateY(50px);
-            transition: opacity 1.5s ease-out, transform 2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        #takuden-hero-section model-viewer.reveal {
-            opacity: 0.7;
-            transform: scale(1) translateY(0);
-        }
-
-        /* Typography */
-        #takuden-hero-section .hero-title {
-            font-size: clamp(3rem, 10vw, 8rem);
-            line-height: 0.9;
-            letter-spacing: -0.02em;
-            text-shadow: 0 0 20px rgba(255, 107, 0, 0.3);
-            opacity: 0;
-            filter: blur(10px);
-        }
-
-        #takuden-hero-section .keyword-flash {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-weight: 900;
-            font-size: clamp(1.5rem, 5vw, 4rem);
-            white-space: nowrap;
-            opacity: 0;
+        /* タイトルコンテナ */
+        .title-container {
+            position: relative;
+            z-index: 10;
             pointer-events: none;
-            color: var(--neon-orange);
-            mix-blend-mode: overlay;
+            text-align: center;
         }
 
-        /* Scroll Hint */
-        #takuden-hero-section .scroll-hint {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
+        .main-heading {
+            font-size: clamp(3rem, 12vw, 10rem);
+            line-height: 0.85;
+            letter-spacing: -0.05em;
+            font-weight: 900;
+        }
+
+        /* 視認性向上のためのシャドウとグロー */
+        #t-1 {
+            text-shadow: 0 0 30px rgba(0,0,0,0.8), 0 4px 10px rgba(0,0,0,0.9);
+        }
+
+        #t-2 {
+            /* オレンジ色の文字にネオンのようなグローを追加 */
+            text-shadow: 
+                0 0 10px rgba(255, 107, 0, 0.4),
+                0 0 20px rgba(255, 107, 0, 0.2),
+                0 4px 15px rgba(0,0,0,0.9);
+        }
+
+        #tagline {
+            text-shadow: 0 2px 10px rgba(0,0,0,1);
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 1000;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 1rem;
-        }
-
-        #takuden-hero-section .scroll-line {
-            width: 1px;
-            height: 60px;
-            background: linear-gradient(to bottom, var(--neon-orange), transparent);
-            animation: scrollLine 2s infinite;
-        }
-
-        @keyframes scrollLine {
-            0% { transform: scaleY(0); transform-origin: top; }
-            50% { transform: scaleY(1); transform-origin: top; }
-            51% { transform: scaleY(1); transform-origin: bottom; }
-            100% { transform: scaleY(0); transform-origin: bottom; }
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            #takuden-hero-section .hero-title {
-                font-size: 4rem;
-            }
         }
     </style>
+</head>
+<body>
 
-    <!-- 1. Loader -->
-    <div id="loader-overlay">
-        <div class="loading-text">Now Loading...</div>
-    </div>
-
-    <!-- 2. Animation Layers -->
-    <div id="flash-container" class="absolute inset-0 z-20 flex items-center justify-center">
-        <div class="keyword-flash">Student Formula EV Challenge</div>
-        <div class="keyword-flash">Design & Manufacturing</div>
-        <div class="keyword-flash">Teamwork & Passion</div>
-    </div>
-
-    <!-- 3. Main Hero Content -->
-    <div class="relative z-10 w-full h-full flex flex-col items-center justify-center p-6 text-center">
-        <div id="club-label" class="mb-4 opacity-0 -translate-y-4 text-xs md:text-sm tracking-[0.4em] uppercase text-gray-400 font-bold">
-            TAKUDEN — Takushoku Univ. EV Club
+<div id="loader">
+    <div class="flex flex-col items-center">
+        <div class="w-64 h-[1px] bg-white/10 relative overflow-hidden">
+            <div id="progress" class="absolute inset-y-0 left-0 w-0 bg-orange-600 shadow-[0_0_20px_#ff6b00]"></div>
         </div>
-        
-        <h1 id="main-title" class="hero-title font-black italic">
-            DRIVE THE <span style="color: #ff6b00;">FUTURE</span>
-        </h1>
-
-        <p id="sub-catch" class="mt-6 opacity-0 translate-y-4 text-gray-300 text-sm md:text-lg max-w-2xl font-light tracking-widest leading-relaxed">
-            ゼロからマシンを創り上げ、<br class="md:hidden">サーキットを駆け抜ける
-        </p>
-
-        <!-- 4. 3D Model -->
-        <div class="absolute inset-0 z-0 pointer-events-none">
-            <model-viewer
-                id="ev-model"
-                src="https://salt6004.github.io/takuden-formula-2025/car.glb"
-                alt="TAKUDEN Formula Car"
-                camera-controls
-                auto-rotate
-                auto-rotate-delay="0"
-                rotation-per-second="10deg"
-                shadow-intensity="2"
-                exposure="0.5"
-                environment-image="neutral"
-                camera-orbit="45deg 75deg 5m"
-                min-camera-orbit="auto 0deg auto"
-                max-camera-orbit="auto 90deg auto"
-                disable-zoom
-            >
-            </model-viewer>
-        </div>
-
-        <!-- 5. Scroll Indicator -->
-        <div class="scroll-hint">
-            <span class="text-[10px] tracking-[0.3em] text-orange-500 font-bold uppercase">Scroll to Explore</span>
-            <div class="scroll-line"></div>
-        </div>
+        <div class="mt-6 text-[9px] tracking-[1.2em] text-white/40 uppercase">Syncing Drive Systems</div>
     </div>
-
-    <script>
-        window.addEventListener('load', () => {
-            const modelViewer = document.querySelector('#ev-model');
-            const loader = document.querySelector('#loader-overlay');
-            const keywords = document.querySelectorAll('.keyword-flash');
-            const tl = gsap.timeline();
-
-            // 3Dモデル読み込み完了後の処理
-            modelViewer.addEventListener('load', () => {
-                // 1. Loader Hide
-                tl.to(loader, {
-                    opacity: 0,
-                    duration: 1,
-                    delay: 0.5,
-                    onComplete: () => loader.style.display = 'none'
-                });
-
-                // 2. Keyword Flashback (Cinematic Effect)
-                keywords.forEach((keyword, index) => {
-                    tl.to(keyword, {
-                        opacity: 0.8,
-                        duration: 0.05,
-                        scale: 1.1,
-                    }, `flash+=${index * 0.2}`);
-                    tl.to(keyword, {
-                        opacity: 0,
-                        duration: 0.05,
-                        filter: "blur(20px)",
-                    });
-                });
-
-                // 3. Main Entrance
-                tl.to("#main-title", {
-                    opacity: 1,
-                    filter: "blur(0px)",
-                    duration: 1.5,
-                    ease: "power4.out"
-                }, "+=0.2");
-
-                tl.to("#club-label", {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8
-                }, "-=1");
-
-                tl.to("#sub-catch", {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                    ease: "power2.out"
-                }, "-=0.5");
-
-                // 4. Reveal 3D Model with Light up effect
-                tl.add(() => {
-                    modelViewer.classList.add('reveal');
-                    // Exposure Animation (Flashlight effect)
-                    gsap.to(modelViewer, {
-                        attr: { exposure: 1.2 },
-                        duration: 2,
-                        ease: "power2.inOut"
-                    });
-                }, "-=1.5");
-
-                // 5. Scroll Hint
-                tl.to(".scroll-hint", {
-                    opacity: 1,
-                    duration: 1
-                });
-            });
-        });
-
-        // Interactive: Mouse move shifts the 3D model slightly
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 20;
-            const y = (e.clientY / window.innerHeight - 0.5) * 20;
-            gsap.to("#ev-model", {
-                x: x,
-                y: y,
-                duration: 2,
-                ease: "power2.out"
-            });
-        });
-    </script>
 </div>
+
+<div id="hero">
+    <div class="absolute inset-0 border-[1px] border-white/5 m-4 md:m-8 pointer-events-none z-20"></div>
+    
+    <div class="absolute top-10 left-10 md:top-12 md:left-12 z-20">
+        <div id="brand-tag" class="text-[10px] font-bold tracking-[0.5em] text-white/50 opacity-0 -translate-y-4">
+            FORMULA EV / TAKUSHOKU UNIV.
+        </div>
+    </div>
+
+    <div class="viewer-wrap">
+        <model-viewer 
+            id="ev-model"
+            src="https://salt6004.github.io/takuden-formula-2025/car.glb"
+            camera-controls
+            disable-zoom="false"
+            touch-action="pan-y"
+            shadow-intensity="2"
+            exposure="0" 
+            environment-image="neutral"
+            camera-orbit="0deg 90deg 20000m" 
+            min-camera-orbit="auto auto 2m"
+            max-camera-orbit="auto auto 25000m"
+            interpolation-decay="100"
+            rotation-per-second="45deg"
+            alt="Takuden EV Formula Car"
+        >
+        </model-viewer>
+    </div>
+
+    <div class="title-container">
+        <h1 class="main-heading">
+            <span id="t-1" class="block italic opacity-0">TAKUDEN</span>
+            <span id="t-2" class="block text-orange-600 opacity-0">FUTURE</span>
+        </h1>
+        
+        <div class="mt-10 relative inline-block">
+            <p id="tagline" class="text-white text-base md:text-2xl font-bold tracking-[0.6em] opacity-0 translate-y-8">
+                挑戦した分だけ、強くなる
+            </p>
+            <div id="tagline-bar" class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-0 h-[1px] bg-orange-600"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', () => {
+        const model = document.querySelector('#ev-model');
+        const prog = document.querySelector('#progress');
+        
+        gsap.to(prog, { 
+            width: "100%", 
+            duration: 1.5, 
+            ease: "power2.inOut", 
+            onComplete: startCinematic 
+        });
+
+        function startCinematic() {
+            const tl = gsap.timeline();
+            
+            tl.to("#loader", { 
+                opacity: 0, 
+                duration: 1.2, 
+                onComplete: () => {
+                    document.getElementById('loader').style.display = 'none';
+                }
+            });
+
+            tl.to(model, { opacity: 1, duration: 0.1 });
+            
+            // 20,000mの彼方から3,000mの引きの構図まで接近
+            tl.to(model, {
+                attr: { "camera-orbit": "45deg 80deg 3000m" },
+                duration: 8,
+                ease: "expo.out"
+            }, "-=0.8");
+
+            tl.to(model, {
+                attr: { exposure: 1.4 },
+                duration: 6,
+                ease: "power2.inOut"
+            }, "-=7.2");
+
+            tl.to("#brand-tag", { opacity: 1, y: 0, duration: 1 }, "-=6.5");
+            tl.to("#t-1", { opacity: 1, duration: 2.5, ease: "power2.out" }, "-=6.0");
+            tl.to("#t-2", { opacity: 1, duration: 2.5, ease: "power2.out" }, "-=5.7");
+
+            tl.to("#tagline", { opacity: 1, y: 0, duration: 1.5, ease: "power3.out" }, "-=4.5");
+            tl.to("#tagline-bar", { width: "140%", duration: 2.5, ease: "expo.inOut" }, "-=4.2");
+
+            tl.add(() => {
+                model.autoRotate = true;
+                model.autoRotateDelay = 0;
+            });
+        }
+    });
+
+    const modelViewer = document.querySelector('#ev-model');
+    const stopRotation = () => {
+        modelViewer.autoRotate = false;
+    };
+
+    modelViewer.addEventListener('mousedown', stopRotation);
+    modelViewer.addEventListener('touchstart', stopRotation, {passive: true});
+    modelViewer.addEventListener('wheel', stopRotation, {passive: true});
+</script>
+
+</body>
+</html>
